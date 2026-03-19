@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+  // Redirect to index.html preserving the path, so client-side routing can handle it
+  location.replace('/' + '?p=' + encodeURIComponent(location.pathname));
+</script>
+</head>
+</html>

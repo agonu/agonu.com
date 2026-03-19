@@ -176,10 +176,10 @@
 <div class="wrap">
 
   <nav class="nav">
-    <a href="#" class="active" id="nav-home" onclick="show('home'); return false;">Arjun Gonuguntla</a>
-    <a href="#" id="nav-projects" onclick="show('projects'); return false;">Projects</a>
-    <a href="#" id="nav-reading" onclick="show('reading'); return false;">Reading</a>
-    <a href="#" id="nav-writing" onclick="show('writing'); return false;">Writing</a>
+    <a href="/" class="active" id="nav-home">Arjun Gonuguntla</a>
+    <a href="/projects" id="nav-projects">Projects</a>
+    <a href="/reading" id="nav-reading">Reading</a>
+    <a href="/writing" id="nav-writing">Writing</a>
   </nav>
 
   <!-- HOME -->
@@ -208,12 +208,41 @@
 </div>
 
 <script>
+  var validPages = ['home', 'projects', 'reading', 'writing'];
+
   function show(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.getElementById('nav-' + name).classList.add('active');
   }
+
+  function getPageFromPath() {
+    var path = location.pathname.replace(/^\//, '') || 'home';
+    return validPages.indexOf(path) !== -1 ? path : 'home';
+  }
+
+  document.querySelector('.nav').addEventListener('click', function(e) {
+    var link = e.target.closest('a');
+    if (!link) return;
+    e.preventDefault();
+    var page = link.getAttribute('href').replace(/^\//, '') || 'home';
+    history.pushState(null, '', link.getAttribute('href'));
+    show(page);
+  });
+
+  window.addEventListener('popstate', function() {
+    show(getPageFromPath());
+  });
+
+  // Handle redirect from 404.html on hard reload
+  var params = new URLSearchParams(location.search);
+  var redirectPath = params.get('p');
+  if (redirectPath) {
+    history.replaceState(null, '', redirectPath);
+  }
+
+  show(getPageFromPath());
 
   function getPreferredTheme() {
     var saved = localStorage.getItem('theme');
