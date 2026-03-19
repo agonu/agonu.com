@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arjun Gonuguntla</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111010;
+    --text: #d9d4ca;
+    --muted: #6b665e;
+    --link: #b89d6e;
+    --serif: 'Libre Baskerville', Georgia, serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 15.5px;
+    line-height: 1.8;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .wrap {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.01em;
+  }
+
+  p {
+    color: var(--muted);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  a:hover { text-decoration: underline; }
+
+  .nav {
+    display: flex;
+    gap: 1.6rem;
+    margin-bottom: 3.2rem;
+  }
+
+  .nav a {
+    font-size: 0.82rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .nav a:hover, .nav a.active { color: var(--text); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  section { margin-bottom: 3rem; }
+
+  h2 {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    font-weight: 400;
+  }
+
+  .entry {
+    margin-bottom: 1.4rem;
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid #1e1c1a;
+  }
+
+  .entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .entry-title {
+    font-size: 0.95rem;
+    color: var(--text);
+    font-style: italic;
+    margin-bottom: 0.2rem;
+    display: block;
+  }
+
+  .entry-meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+
+  .entry-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .inline-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.2rem;
+    margin-top: 1.6rem;
+  }
+
+  .inline-links a {
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .inline-links a:hover { color: var(--link); text-decoration: none; }
+
+  .book-status {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a href="#" class="active" id="nav-home" onclick="show('home'); return false;">Arjun Gonuguntla</a>
+    <a href="#" id="nav-projects" onclick="show('projects'); return false;">Projects</a>
+    <a href="#" id="nav-reading" onclick="show('reading'); return false;">Reading</a>
+    <a href="#" id="nav-writing" onclick="show('writing'); return false;">Writing</a>
+  </nav>
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <h1>Hello, I'm Arjun.</h1>
+    <div class="inline-links">
+      <a href="https://github.com/agonu" target="_blank">github</a>
+      <a href="https://twitter.com/argobargo1" target="_blank">twitter</a>
+      <a href="https://linkedin.com/in/agonu" target="_blank">linkedin</a>
+      <a href="agonu@berkeley.edu">email</a>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="page" id="page-projects">
+  </div>
+
+  <!-- READING -->
+  <div class="page" id="page-reading">
+  </div>
+
+  <!-- WRITING -->
+  <div class="page" id="page-writing">
+  </div>
+
+</div>
+
+<script>
+  function show(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.getElementById('nav-' + name).classList.add('active');
+  }
+</script>
+</body>
+</html>
