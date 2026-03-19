@@ -14,7 +14,16 @@
     --text: #d9d4ca;
     --muted: #6b665e;
     --link: #b89d6e;
+    --border: #1e1c1a;
     --serif: 'Libre Baskerville', Georgia, serif;
+  }
+
+  [data-theme="light"] {
+    --bg: #f5f2ed;
+    --text: #2a2722;
+    --muted: #7a756c;
+    --link: #8b6f3a;
+    --border: #ddd8d0;
   }
 
   body {
@@ -86,7 +95,7 @@
   .entry {
     margin-bottom: 1.4rem;
     padding-bottom: 1.4rem;
-    border-bottom: 1px solid #1e1c1a;
+    border-bottom: 1px solid var(--border);
   }
 
   .entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
@@ -136,9 +145,34 @@
     color: var(--muted);
     opacity: 0.6;
   }
+
+  .theme-toggle {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: 1px solid var(--muted);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 14px;
+    transition: color 0.2s, border-color 0.2s;
+    font-family: system-ui, sans-serif;
+  }
+
+  .theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--text);
+  }
 </style>
 </head>
 <body>
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
 <div class="wrap">
 
   <nav class="nav">
@@ -180,6 +214,26 @@
     document.getElementById('page-' + name).classList.add('active');
     document.getElementById('nav-' + name).classList.add('active');
   }
+
+  function getPreferredTheme() {
+    var saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelector('.theme-toggle').textContent = theme === 'dark' ? '\u263C' : '\u263E';
+  }
+
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+
+  applyTheme(getPreferredTheme());
 </script>
 </body>
 </html>
