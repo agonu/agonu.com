@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arjun Gonuguntla</title>
+<link rel="icon" href="/favicon.png" type="image/png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -62,10 +63,25 @@
 
   a:hover { text-decoration: underline; }
 
+  .site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+  }
+
+  .site-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
   .nav {
     display: flex;
-    gap: 1.6rem;
-    margin-bottom: 3.2rem;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: flex-end;
   }
 
   .nav a {
@@ -176,16 +192,18 @@
 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
 <div class="wrap">
 
-  <nav class="nav">
-    <a href="/" class="active" id="nav-home">Arjun Gonuguntla</a>
-    <a href="/projects" id="nav-projects">Projects</a>
-    <a href="/reading" id="nav-reading">Reading</a>
-    <a href="/writing" id="nav-writing">Writing</a>
-  </nav>
+  <div class="site-header">
+    <div class="site-name">Arjun Gonuguntla</div>
+    <nav class="nav">
+      <a href="/" class="active" id="nav-home">Home</a>
+      <a href="/reading" id="nav-reading">Reading</a>
+      <a href="/writing" id="nav-writing">Writing</a>
+    </nav>
+  </div>
 
   <!-- HOME -->
   <div class="page active" id="page-home">
-    <h1>Hello, I'm Arjun.</h1>
+    <h1>Welcome to my website!</h1>
     <div class="inline-links">
       <a href="https://github.com/agonu" target="_blank">github</a>
       <a href="https://twitter.com/argobargo1" target="_blank">twitter</a>
@@ -194,22 +212,20 @@
     </div>
   </div>
 
-  <!-- PROJECTS -->
-  <div class="page" id="page-projects">
-  </div>
-
   <!-- READING -->
   <div class="page" id="page-reading">
+    <h1>Coming soon.</h1>
   </div>
 
   <!-- WRITING -->
   <div class="page" id="page-writing">
+    <h1>Coming soon.</h1>
   </div>
 
 </div>
 
 <script>
-  var validPages = ['home', 'projects', 'reading', 'writing'];
+  var validPages = ['home', 'reading', 'writing'];
 
   function show(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
