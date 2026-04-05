@@ -56,6 +56,8 @@
     font-size: 0.95rem;
   }
 
+  p a { color: var(--link); }
+
   a {
     color: var(--link);
     text-decoration: none;
@@ -144,7 +146,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.3rem 1.2rem;
-    margin-top: 1.6rem;
   }
 
   .inline-links a {
@@ -186,6 +187,35 @@
     color: var(--text);
     border-color: var(--text);
   }
+
+  /* Pretext breathing effect */
+  #flow-wrap {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  #flow-fallback {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .flow-line {
+    position: absolute;
+    white-space: pre;
+    overflow: hidden;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 </head>
 <body>
@@ -203,13 +233,22 @@
 
   <!-- HOME -->
   <div class="page active" id="page-home">
-    <h1>Welcome to my website!</h1>
-    <div class="inline-links">
-      <a href="https://github.com/agonu" target="_blank">github</a>
-      <a href="https://twitter.com/argobargo1" target="_blank">twitter</a>
-      <a href="https://linkedin.com/in/agonu" target="_blank">linkedin</a>
-      <a href="mailto:agonu@berkeley.edu">email</a>
+    <h1 id="heading"></h1>
+
+    <div id="flow-wrap" class="fade-in" style="opacity:0">
+      <p id="flow-fallback">I'm a student at UC Berkeley studying computer science.</p>
+      <div id="flow-lines"></div>
     </div>
+
+    <section class="fade-in" style="opacity:0" id="section-elsewhere">
+      <h2>Elsewhere</h2>
+      <div class="inline-links">
+        <a href="https://github.com/agonu" target="_blank">github</a>
+        <a href="https://twitter.com/argonaut785" target="_blank">twitter</a>
+        <a href="https://linkedin.com/in/agonu" target="_blank">linkedin</a>
+        <a href="mailto:agonu@berkeley.edu">email</a>
+      </div>
+    </section>
   </div>
 
   <!-- READING -->
@@ -252,7 +291,6 @@
     show(getPageFromPath());
   });
 
-  // Handle redirect from 404.html on hard reload
   var params = new URLSearchParams(location.search);
   var redirectPath = params.get('p');
   if (redirectPath) {
@@ -280,6 +318,105 @@
   }
 
   applyTheme(getPreferredTheme());
+</script>
+
+<script type="module">
+const bioText =
+  "I'm a student at UC Berkeley studying computer science.";
+
+const flowWrap = document.getElementById('flow-wrap');
+const fallback = document.getElementById('flow-fallback');
+const linesEl = document.getElementById('flow-lines');
+
+const fontSize = 14.725;
+const font = fontSize + "px 'Libre Baskerville'";
+const lineHeight = Math.round(fontSize * 1.8);
+
+async function init() {
+  try {
+    const pretext = await import('https://esm.sh/@chenglou/pretext');
+    await document.fonts.ready;
+
+    const prepared = pretext.prepareWithSegments(bioText, font);
+    const containerWidth = flowWrap.offsetWidth;
+
+    // Pre-calculate final line breaks so text never jumps
+    const finalLines = [];
+    let cursor = { segmentIndex: 0, graphemeIndex: 0 };
+    let y = 0;
+    while (true) {
+      const line = pretext.layoutNextLine(prepared, cursor, containerWidth);
+      if (!line) break;
+      finalLines.push({ text: line.text, y });
+      cursor = line.end;
+      y += lineHeight;
+    }
+
+    // Set container height upfront to prevent layout shift
+    flowWrap.style.height = (y + 4) + 'px';
+    fallback.style.display = 'none';
+
+    // Type out character by character, respecting pre-calculated line breaks
+    let lineIdx = 0;
+    let charIdx = 0;
+    const speed = 45; // ms per character
+
+    // Create all line divs upfront (empty)
+    const lineDivs = [];
+    const frag = document.createDocumentFragment();
+    for (const l of finalLines) {
+      const div = document.createElement('div');
+      div.className = 'flow-line';
+      div.style.top = l.y + 'px';
+      frag.appendChild(div);
+      lineDivs.push(div);
+    }
+    linesEl.appendChild(frag);
+
+    function tick() {
+      if (lineIdx >= finalLines.length) return;
+
+      charIdx++;
+      lineDivs[lineIdx].textContent = finalLines[lineIdx].text.slice(0, charIdx);
+
+      if (charIdx >= finalLines[lineIdx].text.length) {
+        lineIdx++;
+        charIdx = 0;
+      }
+
+      setTimeout(tick, speed);
+    }
+
+    // Called after heading finishes typing
+    window._startBioTypewriter = function() {
+      flowWrap.style.animation = 'fadeUp 0.6s ease forwards';
+      setTimeout(tick, 300);
+      setTimeout(() => {
+        document.getElementById('section-elsewhere').style.animation = 'fadeUp 0.6s ease forwards';
+      }, 400);
+    };
+  } catch (err) {
+    console.warn('pretext failed to load:', err);
+  }
+}
+
+// Type out heading first
+const headingText = 'Welcome to my website!';
+const heading = document.getElementById('heading');
+let hi = 0;
+
+function typeHeading() {
+  hi++;
+  heading.textContent = headingText.slice(0, hi);
+  if (hi < headingText.length) {
+    setTimeout(typeHeading, 55);
+  } else if (window._startBioTypewriter) {
+    setTimeout(window._startBioTypewriter, 350);
+  }
+}
+
+setTimeout(typeHeading, 300);
+init();
 </script>
 </body>
 </html>
