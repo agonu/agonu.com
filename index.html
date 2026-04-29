@@ -280,7 +280,6 @@
       <li style="opacity:0"><em>The Immortal Life of Henrietta Lacks</em> by Rebecca Skloot</li>
       <li style="opacity:0"><em>The Kentucky Derby is Decadent and Depraved</em> by Hunter S. Thompson</li>
       <li style="opacity:0"><em>Malgudi Days</em> by R.K. Narayan</li>
-      <li style="opacity:0"><em>The Alchemist</em> by Paulo Coelho</li>
     </ul>
   </div>
 
@@ -313,10 +312,13 @@
     var page = link.getAttribute('href').replace(/^\//, '') || 'home';
     history.pushState(null, '', link.getAttribute('href'));
     show(page);
+    if (page === 'home' && window._initHomePage) window._initHomePage();
   });
 
   window.addEventListener('popstate', function() {
-    show(getPageFromPath());
+    var page = getPageFromPath();
+    show(page);
+    if (page === 'home' && window._initHomePage) window._initHomePage();
   });
 
   var params = new URLSearchParams(location.search);
@@ -474,8 +476,18 @@ function typeHeading() {
   }
 }
 
-setTimeout(typeHeading, 300);
-init();
+let homeInited = false;
+window._initHomePage = function() {
+  if (homeInited) return;
+  if (flowWrap.offsetWidth === 0) return;
+  homeInited = true;
+  setTimeout(typeHeading, 300);
+  init();
+};
+
+if (document.getElementById('page-home').classList.contains('active')) {
+  window._initHomePage();
+}
 </script>
 </body>
 </html>
