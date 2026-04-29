@@ -155,6 +155,23 @@
 
   .inline-links a:hover { color: var(--link); text-decoration: none; }
 
+  .book-list {
+    list-style: disc;
+    padding-left: 1.2rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .book-list li {
+    margin-bottom: 0.35rem;
+    line-height: 1.7;
+  }
+
+  .book-list em {
+    color: var(--text);
+    font-style: italic;
+  }
+
   .book-status {
     font-size: 0.7rem;
     letter-spacing: 0.06em;
@@ -242,17 +259,29 @@
     <section class="fade-in" style="opacity:0" id="section-elsewhere">
       <h2>elsewhere</h2>
       <div class="inline-links">
-        <a href="https://github.com/agonu" target="_blank">github</a>
-        <!-- <a href="https://twitter.com/argonaut785" target="_blank">twitter</a> -->
-        <a href="https://linkedin.com/in/agonu" target="_blank">linkedin</a>
         <a href="mailto:agonu@berkeley.edu">email</a>
+        <a href="https://linkedin.com/in/agonu" target="_blank">linkedin</a>
+        <!-- <a href="https://twitter.com/argonaut785" target="_blank">twitter</a> -->
+        <a href="https://github.com/agonu" target="_blank">github</a>
       </div>
     </section>
   </div>
 
   <!-- READING -->
   <div class="page" id="page-reading">
-    <h1>Coming soon.</h1>
+    <h1 id="reading-heading"></h1>
+    <ul class="book-list" id="reading-list">
+      <li style="opacity:0"><em>The Little Prince</em> by Antoine de Saint-Exupéry</li>
+      <li style="opacity:0"><em>The Stranger</em> by Albert Camus</li>
+      <li style="opacity:0"><em>On Earth We're Briefly Gorgeous</em> by Ocean Vuong</li>
+      <li style="opacity:0"><em>Hopscotch</em> by Julio Cortázar</li>
+      <li style="opacity:0"><em>Pale Fire</em> by Vladimir Nabokov</li>
+      <li style="opacity:0"><em>Dune</em> by Frank Herbert</li>
+      <li style="opacity:0"><em>The Immortal Life of Henrietta Lacks</em> by Rebecca Skloot</li>
+      <li style="opacity:0"><em>The Kentucky Derby is Decadent and Depraved</em> by Hunter S. Thompson</li>
+      <li style="opacity:0"><em>Malgudi Days</em> by R.K. Narayan</li>
+      <li style="opacity:0"><em>The Alchemist</em> by Paulo Coelho</li>
+    </ul>
   </div>
 
   <!-- WRITING -->
@@ -317,6 +346,37 @@
   }
 
   applyTheme(getPreferredTheme());
+
+  // Reading page: typewriter heading + staggered book fade-in
+  var readingInited = false;
+  function initReadingPage() {
+    if (readingInited) return;
+    readingInited = true;
+
+    var text = 'Some works I like:';
+    var heading = document.getElementById('reading-heading');
+    var i = 0;
+    function typeTick() {
+      i++;
+      heading.textContent = text.slice(0, i);
+      if (i < text.length) {
+        setTimeout(typeTick, 55);
+      } else {
+        var items = document.querySelectorAll('#reading-list li');
+        items.forEach(function(li, idx) {
+          setTimeout(function() {
+            li.style.animation = 'fadeUp 0.5s ease forwards';
+          }, idx * 90);
+        });
+      }
+    }
+    setTimeout(typeTick, 200);
+  }
+
+  document.getElementById('nav-reading').addEventListener('click', initReadingPage);
+  if (location.pathname.replace(/^\//, '') === 'reading') {
+    initReadingPage();
+  }
 </script>
 
 <script type="module">
